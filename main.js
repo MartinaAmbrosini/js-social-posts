@@ -1,3 +1,5 @@
+// Milestone 1 - Prendendo come riferimento il layout di esempio presente nell’html, stampiamo i post del nostro feed, prendendo le informazioni che ci servono dall’array di oggetti che già trovate.
+
 const posts = [
     {
         "id": 1,
@@ -55,3 +57,89 @@ const posts = [
         "created": "2021-03-05"
     }
 ];
+
+// selezioni i miei container dei post tramite il loro ID
+
+const postsContainer = document.getElementById("container");
+console.log(postsContainer);
+
+// creo ciclo for con le sue variabili e stampo l'html dato nel feed
+
+for (let i = 0; i < posts.length; i++) {
+    let post = posts[i];
+    
+   const id = post.id;
+   const content = post.content;
+   const authorname = post.author.name;
+   const authorimg = post.author.image;
+   let likes = post.likes;
+   const created = new Date(post.created).toLocaleDateString();
+
+   const cardElement = `<div class="post">
+                            <div class="post__header">
+                                <div class="post-meta">                    
+                                    <div class="post-meta__icon">
+                                        <img class="profile-pic" src="${authorimg}" alt="">                    
+                                    </div>
+                                    <div class="post-meta__data">
+                                        <div class="post-meta__author">${authorname}</div>
+                                        <div class="post-meta__time">${created}</div>
+                                    </div>                    
+                                </div>
+                            </div>
+                            <div class="post__text">${content}</div>
+                            <div class="post__image">
+                                <img src="${authorimg}" alt="">
+                            </div>
+                            <div class="post__footer">
+                                <div class="likes js-likes">
+                                    <div class="likes__cta">
+                                        <a class="like-button  js-like-button" href="#" data-postid="1">
+                                            <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
+                                            <span class="like-button__label">Mi Piace</span>
+                                        </a>
+                                    </div>
+                                    <div class="likes__counter">
+                                        Piace a <b class ="like-counter-1" class="js-likes-counter">${likes}</b> persone
+                                    </div>
+                                </div> 
+                            </div>            
+                        </div>`
+
+    postsContainer.innerHTML += cardElement;
+}
+
+
+const counters = document.querySelectorAll(".like-counter-1");
+const buttonLikesSelection = document.querySelectorAll(".like-button");
+
+
+// Milestone 2 - Se clicchiamo sul tasto “Mi Piace” cambiamo il colore al testo del bottone e incrementiamo il counter dei likes relativo. Salviamo in un secondo array gli id dei post ai quali abbiamo messo il like.
+
+// Prendo il bottone da cliccare attraverso ciclo forEach
+
+buttonLikesSelection.forEach((elementbutton, index) => {
+
+    // creo evento per cui se clicco il bottone il numero di click aumenta
+    elementbutton.addEventListener("click", 
+    function (event) {
+        event.preventDefault() 
+
+        let countersElement = counters[index];
+        let countersValue = parseInt(countersElement.innerHTML);
+
+        // SE clicco il tasto like ALLORA il counter dei like aumenta
+        if (!elementbutton.classList.contains("like-button--liked")) {
+            elementbutton.classList.add("like-button--liked");
+            countersValue ++
+            countersElement.innerHTML = countersValue;
+        }
+        // ALTRIMENTI ci riclicco sopra per toglierlo
+        else{
+            elementbutton.classList.remove("like-button--liked");
+            countersValue -= 1;
+            countersElement.innerHTML = countersValue;
+        }
+    }
+    )
+});
